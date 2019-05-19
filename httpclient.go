@@ -10,7 +10,6 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/btcsuite/go-socks/socks"
 	"github.com/githubsands/twittercli/twitterjson"
 )
 
@@ -20,12 +19,6 @@ import (
 func newHTTPClient(cfg *config) (*http.Client, error) {
 	// Configure proxy if needed.
 	var dial func(network, addr string) (net.Conn, error)
-	if cfg.Proxy != "" {
-		proxy := &socks.Proxy{
-			Addr:     cfg.Proxy,
-			Username: cfg.ProxyUser,
-			Password: cfg.ProxyPass,
-		}
 
 		dial = func(network, addr string) (net.Conn, error) {
 			c, err := proxy.Dial(network, addr)
