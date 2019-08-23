@@ -3,7 +3,6 @@ package twitterjson
 const (
 	post     = "POST"
 	get      = "GET"
-	statuses = "statuses/"
 )
 
 type command struct {
@@ -24,31 +23,35 @@ func NewUpdateCmd() *UpdateCmd {
 	}
 }
 
-type DestroyCmd struct {
+// DestroyTweetCmd destroys a tweet given the tweet identification number, id 
+type DestroyTweetCmd struct {
 	kind string
 	path string
 }
 
-func NewDestroyCmd() *DestroyCmd {
+func NewDestroyTweetCmd(i string) *DestroyCmd {
 	return &DestroyCmd{
 		kind: post,
-		path: "statuses/destroy/:id",
+		path: "statuses/destroy/:id"+i,
 	}
 }
 
-type ShowCmd struct {
+// ShowTweetCmd shows a tweet given the tweet identification number, id
+type ShowTweetCmd struct {
 	kind string
 	path string
 }
 
-// insert id here.
-func NewShowCmd() *ShowCmd {
+func NewShowCmd(i string) *ShowTweetCmd {
 	return &ShowCmd{
 		kind: get,
-		path: "statuses/show/:id",
+		path: "statuses/show/:"+i, 
 	}
 }
 
+/*
+// TO DO FINISH THIS:
+// Returns a tweet in oembed form given the tweets 
 type EmbedCmd struct {
 	kind string
 	path string
@@ -58,18 +61,26 @@ type EmbedCmd struct {
 func NewEmbedCmd() *EmbedCmd {
 	return &EmbedCmd{
 		kind: get,
-		path: "statuses/embed",
+		path: "statuses/oembed",
 	}
 }
+*/ 
 
-type StatusCmd struct {
+// StatusLookUpCmd gets a fully-hydrated tweet objects 
+//
+// It is suggested to use 
+type StatusLookUpCmd struct {
 	kind string
 	path string
 }
 
-func NewStatusCmd() *StatusCmd {
+func NewStatusLookUpCmd(k string) *StatusCmd, error {
+	if k != get || k != post {
+		return nil, errors.New("Post request must be GET or POST")
+	}
+
 	return &StatusCmd{
-		kind: get,
+		kind: k,
 		path: "statuses/lookup",
 	}
 }
@@ -126,10 +137,10 @@ type CreateLikeCmd struct {
 	path string
 }
 
-func NewCreateLikeCmd() *CreateLikeCmd {
+func NewCreateLikeCmd(i string) *CreateLikeCmd {
 	return &CreateLikeCmd{
 		kind: post,
-		path: "favorites/create/:id",
+		path: "favorites/create/:"+i,
 	}
 }
 
@@ -139,10 +150,10 @@ type DestroyLikeCmd struct {
 	path string
 }
 
-func NewDestroyLikeCmd() *DestroyLikeCmd {
+func NewDestroyLikeCmd(i string) *DestroyLikeCmd {
 	return &DestroyLikeCmd{
 		kind: post,
-		path: "favorites/destroy/:id",
+		path: "favorites/destroy/:"+i, 
 	}
 }
 
@@ -229,6 +240,20 @@ type GetListMembersCmd struct {
 	skip_status       *bool
 }
 
+func NewGetListMembersCmd(n, sl string, osn *string, oi, c, cu *int, ie, ss *bool) {
+	return &GetListMemberCmd{
+		path: "", 
+		kind: "GET", 
+		slug: sl, 
+		owner_screen_name: osn, 
+		owner_id: oi, 
+		count: c, 
+		cursor: cu, 
+		include_entities: ie, 
+		skip_status: ss, 
+	}
+}
+
 // GetListShow Returns the specified list. Private lists will only be shown if the authenticated user owns the specified list.
 type GetListShowCmd struct {
 	path              string
@@ -240,7 +265,7 @@ type GetListShowCmd struct {
 	owner_id          *string
 }
 
-func NewGetListShowCmd(n string, s int, o *string, oi *string) *GetListShowCmd {
+func NewGetListShowCmd(n string, s int, o *string, oi *string) &GetListShowCmd {
 	return &GetListShowCmd{
 		path:              "lists/show",
 		kind:              "GET",
@@ -258,6 +283,7 @@ type GetListCreateCmd struct {
 	description *string
 }
 
+// TODO: Fix this
 func NewGetListCreateCmd(n string, m, d *string) *GetListCreateCmd {
 	return &GetListCreateCmd{
 		path:        "https://api.twitter.com/1.1/lists/create.json",
