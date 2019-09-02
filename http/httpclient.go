@@ -68,11 +68,36 @@ func NewTwitterClient(cfg *config) (*TwitterClient, error) {
 	}
 
 	return &TwitterClient{
-		httpClient: client, 
-	}, nil 
+		httpClient: client,
+	}, nil
 }
 
-func (t *TwitterClient) SendHTTPRequest(req *http.Request) (*http.Response, error) {
+func (t *TwitterClient) GetHTTPRequestBody([]byte, error) {
+	httpResponse, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if httpResponse.StatusCode < 200 || httpResponse.StatusCode >= 300 {
+		if len(respBytes) == 0 {
+			return nil, fmt.Errorf("%d %s", httpResponse.StatusCode,
+				http.StatusText(httpResponse.StatusCode))
+		}
+		return nil, fmt.Errorf("%s", respBytes)
+	}
+
+	// Read the raw bytes and close the response.
+	respBytes, err := ioutil.ReadAll(httpResponse.Body)
+	httpResponse.Body.Close()
+	if err != nil {
+		err = fmt.Errorf("error reading reply: %v", err)
+		return nil, err
+	}
+
+	return respBytes, nil
+}
+
+func (t *TwitterClient) GetHTTPRequest(req *http.Request) (http.Request, error) {
 	httpResponse, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -96,4 +121,3 @@ func (t *TwitterClient) SendHTTPRequest(req *http.Request) (*http.Response, erro
 
 	return httpResponse, nil
 }
-
