@@ -1,9 +1,4 @@
-package twitterjson
-
-const (
-	post = "POST"
-	get  = "GET"
-)
+package methods
 
 // https://developer.twitter.com/en/docs/basics/authentication/api-reference/authenticate
 type AuthenticateCmd struct {
@@ -13,8 +8,8 @@ type AuthenticateCmd struct {
 
 // TODO: forcelogin or screenName are not included in the path
 func NewAuthenticateCmd(n string, forceLogin *bool, screenName *string) *AuthenticateCmd {
-	return &UpdateCmd{
+	return &AuthenticateCmd{
 		kind: get,
-		path: "oauth/authenticate,
+		path: "oauth/authenticate",
 	}
 }

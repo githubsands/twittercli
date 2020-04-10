@@ -1,9 +1,6 @@
-package twitterjson
+package methods
 
-const (
-	post     = "POST"
-	get      = "GET"
-)
+import "errors"
 
 type UpdateCmd struct {
 	kind string
@@ -17,16 +14,16 @@ func NewUpdateCmd() *UpdateCmd {
 	}
 }
 
-// DestroyTweetCmd destroys a tweet given the tweet identification number, id 
+// DestroyTweetCmd destroys a tweet given the tweet identification number, id
 type DestroyTweetCmd struct {
 	kind string
 	path string
 }
 
-func NewDestroyTweetCmd(i string) *DestroyCmd {
-	return &DestroyCmd{
+func NewDestroyTweetCmd(i string) *DestroyTweetCmd {
+	return &DestroyTweetCmd{
 		kind: post,
-		path: "statuses/destroy/:id"+i,
+		path: "statuses/destroy/:id" + i,
 	}
 }
 
@@ -37,15 +34,15 @@ type ShowTweetCmd struct {
 }
 
 func NewShowCmd(i string) *ShowTweetCmd {
-	return &ShowCmd{
+	return &ShowTweetCmd{
 		kind: get,
-		path: "statuses/show/:"+i, 
+		path: "statuses/show/:" + i,
 	}
 }
 
 /*
 // TO DO FINISH THIS:
-// Returns a tweet in oembed form given the tweets 
+// Returns a tweet in oembed form given the tweets
 type EmbedCmd struct {
 	kind string
 	path string
@@ -58,25 +55,25 @@ func NewEmbedCmd() *EmbedCmd {
 		path: "statuses/oembed",
 	}
 }
-*/ 
+*/
 
-// StatusLookUpCmd gets a fully-hydrated tweet objects 
+// StatusLookUpCmd gets a fully-hydrated tweet objects
 //
-// It is suggested to use 
+// It is suggested to use
 type StatusLookUpCmd struct {
 	kind string
 	path string
 }
 
-func NewStatusLookUpCmd(k string) *StatusCmd, error {
+func NewStatusLookUpCmd(k string) (*StatusLookUpCmd, error) {
 	if k != get || k != post {
 		return nil, errors.New("Post request must be GET or POST")
 	}
 
-	return &StatusCmd{
+	return &StatusLookUpCmd{
 		kind: k,
 		path: "statuses/lookup",
-	}
+	}, nil
 }
 
 type RetweetCmd struct {
@@ -134,7 +131,7 @@ type CreateLikeCmd struct {
 func NewCreateLikeCmd(i string) *CreateLikeCmd {
 	return &CreateLikeCmd{
 		kind: post,
-		path: "favorites/create/:"+i,
+		path: "favorites/create/:" + i,
 	}
 }
 
@@ -147,7 +144,7 @@ type DestroyLikeCmd struct {
 func NewDestroyLikeCmd(i string) *DestroyLikeCmd {
 	return &DestroyLikeCmd{
 		kind: post,
-		path: "favorites/destroy/:"+i, 
+		path: "favorites/destroy/:" + i,
 	}
 }
 
