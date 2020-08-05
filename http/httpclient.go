@@ -1,18 +1,10 @@
-package main
+package http
 
 import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
 )
-
-type config struct {
-	TLSSkipVerify bool
-}
-
-type Client interface {
-	Send(*http.Request) (*http.Response, error)
-}
 
 type TwitterClient struct {
 	marshalResponse bool
