@@ -2,19 +2,17 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 
-	"gopkg.in/yaml.v3"
-
-	"github.com/davecgh/go-spew/spew"
 	twitterhttp "github.com/githubsands/twittercli/http"
+	"github.com/githubsands/twittercli/util"
 )
 
 const (
-	defaultConfig = "config.yml"
 	defaultLogger = "logs"
+	defaultConfig = "config.yml"
 )
 
 type config struct {
@@ -24,7 +22,7 @@ type config struct {
 
 func main() {
 	var (
-		l = startLogger()
+		l = util.StartLogger(defaultLogger)
 	)
 
 	err := twittercli(l)
@@ -38,7 +36,7 @@ func main() {
 
 func twittercli(l *log.Logger) int {
 	var (
-		cfg, err = getConfig()
+		cfg, err = util.GetConfig(defaultConfig)
 	)
 
 	if err != nil {
@@ -46,17 +44,13 @@ func twittercli(l *log.Logger) int {
 		return 1
 	}
 
-	tc, err := twitterhttp.NewTwitterClient(cfg.marshalResponse)
+	tc, err := twitterhttp.NewTwitterClient(cfg)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		return 1
 	}
 
-	req, err := tc.NewTwitterRequest()
-	if err != nil {
-		fmt.Printf("%v\n", err)
-		return 1
-	}
+	req := &http.Request{}
 
 	res, err := tc.GetHTTPResponseBodyBytes(req)
 	if err != nil {
@@ -65,40 +59,4 @@ func twittercli(l *log.Logger) int {
 
 	fmt.Printf("%v\n", res)
 	return 0
-}
-
-func startLogger() *log.Logger {
-	var (
-		loc, _ = os.Getwd()
-	)
-
-	w, err := os.Create(defaultLogger)
-	if err != nil {
-		panic(err)
-	}
-	defer w.Close()
-
-	return log.New(w, loc, 3)
-}
-
-func getConfig() (*config, error) {
-	var (
-		configPath = defaultConfig
-		err        error
-	)
-
-	var cfg *config
-	fmt.Printf("%v\n", configPath)
-	buf, err := ioutil.ReadFile(configPath)
-	if err != nil {
-		return nil, err
-	}
-
-	err = yaml.Unmarshal(buf, &cfg)
-	if err != nil {
-		log.Fatalf("Failed to unmarshal: %v, err")
-	}
-
-	spew.Dump(cfg)
-	return cfg, nil
 }
