@@ -1,3 +1,5 @@
+package methods
+
 // Create and Manage List
 
 // developer.twitter.com/en/docs/accounts-and-users/create-manage-lists/api-reference/get-lists-list
@@ -14,17 +16,17 @@ type GetListMembersCmd struct {
 	skip_status       *bool
 }
 
-func NewGetListMembersCmd(n, sl string, osn *string, oi, c, cu *int, ie, ss *bool) {
-	return &GetListMemberCmd{
-		path: "", 
-		kind: "GET", 
-		slug: sl, 
-		owner_screen_name: osn, 
-		owner_id: oi, 
-		count: c, 
-		cursor: cu, 
-		include_entities: ie, 
-		skip_status: ss, 
+func NewGetListMembersCmd(n, sl string, osn *string, oi, c, cu *int, ie, ss *bool) *GetListMembersCmd {
+	return &GetListMembersCmd{
+		path:              "",
+		kind:              "GET",
+		slug:              sl,
+		owner_screen_name: osn,
+		owner_id:          oi,
+		count:             c,
+		cursor:            cu,
+		include_entities:  ie,
+		skip_status:       ss,
 	}
 }
 
@@ -48,33 +50,6 @@ func NewGetListCmd(n string, u *string, sn *string, r *string) *GetListCmd {
 	}
 }
 
-type GetListMembersCmd struct {
-	path              string
-	kind              string
-	name              string
-	slug              string
-	owner_screen_name *string
-	owner_id          *int
-	count             *int
-	cursor            *int
-	include_entities  *bool
-	skip_status       *bool
-}
-
-func NewGetListMembersCmd(n, sl string, osn *string, oi, c, cu *int, ie, ss *bool) {
-	return &GetListMemberCmd{
-		path: "", 
-		kind: "GET", 
-		slug: sl, 
-		owner_screen_name: osn, 
-		owner_id: oi, 
-		count: c, 
-		cursor: cu, 
-		include_entities: ie, 
-		skip_status: ss, 
-	}
-}
-
 // GetListShow Returns the specified list. Private lists will only be shown if the authenticated user owns the specified list.
 type GetListShowCmd struct {
 	path              string
@@ -84,16 +59,6 @@ type GetListShowCmd struct {
 	slug              int
 	owner_screen_name *string
 	owner_id          *string
-}
-
-func NewGetListShowCmd(n string, s int, o *string, oi *string) &GetListShowCmd {
-	return &GetListShowCmd{
-		path:              "lists/show",
-		kind:              "GET",
-		slug:              s,
-		owner_screen_name: o,
-		owner_id:          oi,
-	}
 }
 
 type GetListCreateCmd struct {

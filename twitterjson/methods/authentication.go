@@ -1,4 +1,4 @@
-package twitterjson
+package methods
 
 const (
 	post = "POST"
@@ -13,8 +13,8 @@ type AuthenticateCmd struct {
 
 // TODO: forcelogin or screenName are not included in the path
 func NewAuthenticateCmd(n string, forceLogin *bool, screenName *string) *AuthenticateCmd {
-	return &UpdateCmd{
+	return &AuthenticateCmd{
 		kind: get,
-		path: "oauth/authenticate,
+		path: "oauth/authenticate",
 	}
 }
