@@ -17,11 +17,6 @@ const (
 	defaultConfig = "config.yml"
 )
 
-type config struct {
-	authToken       string `yaml:"authtoken"`
-	marshalResponse bool   `yaml:"marshalresponse"`
-}
-
 func main() {
 	var (
 		l = util.StartLogger(defaultLogger)
