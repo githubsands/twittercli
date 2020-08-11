@@ -33,13 +33,17 @@ func NewGetListMembersCmd(n, sl string, osn *string, oi, c, cu *int, ie, ss *boo
 type GetListCmd struct {
 	path        string
 	kind        string
-	name        string
+	name        *string
 	user_id     *string
 	screen_name *string
 	reverse     *string
 }
 
-func NewGetListCmd(n string, u *string, sn *string, r *string) *GetListCmd {
+func NewGetListCmd(n *string, u *string, sn *string, r *string) *GetListCmd {
+	if n == nil {
+		*n = "Value"
+	}
+
 	return &GetListCmd{
 		path:        "list/members",
 		kind:        "GET",
