@@ -5,9 +5,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	twitterhttp "github.com/githubsands/twittercli/http"
 	"github.com/githubsands/twittercli/util"
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -57,6 +59,29 @@ func twittercli(l *log.Logger) int {
 		return 1
 	}
 
+	go CreateServer().ListenAndServe()
+
 	fmt.Printf("%v\n", res)
 	return 0
+}
+
+func CreateServer() *http.Server {
+	r := mux.NewRouter()
+	r.HandleFunc("/", HomeHandler)
+
+	srv := &http.Server{
+		Handler: r,
+		Addr:    "127.0.0.1:8000",
+		// Good practice: enforce timeouts for servers you create!
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	return srv
+}
+
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "Category: %v\n", vars["category"])
 }
