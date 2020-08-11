@@ -59,9 +59,12 @@ func twittercli(l *log.Logger) int {
 		return 1
 	}
 
-	go CreateServer().ListenAndServe()
-
 	fmt.Printf("%v\n", res)
+
+	if cfg.Server() {
+		CreateServer().ListenAndServe()
+	}
+
 	return 0
 }
 
